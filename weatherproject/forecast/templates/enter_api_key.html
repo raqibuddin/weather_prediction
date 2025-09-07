@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="{% static 'css/enter.css' %}?v=2"/>
+  <link rel="icon" href="{% static 'img/site-pic.ico' %}?v=2" type="image/icon type"/>
+  <title>Enter API Key</title>
+</head>
+<body>
+  <div class="api-container">
+    <h1> Weather Prediction </h1>
+    <p class="intro">
+      This website provides weather predictions using data from <strong>OpenWeatherMap</strong>. 
+      To get started, you’ll need your API key. Don’t worry—it’s free and only takes a few minutes. 
+      Follow the steps below and verify your own API key.
+    </p>
+
+    <!-- Step 1 -->
+    <section class="step">
+      <h2>Step 1: Generate Your API Key</h2>
+      <ul>
+        <li>Visit the 
+          <a href="https://home.openweathermap.org/api_keys" target="_blank">
+            OpenWeather API Keys page
+          </a>.
+        </li>
+        <li>Log in or sign up for an OpenWeather account.</li>
+        <li>Create a free API key and give it a name (optional).</li>
+      </ul>
+      <p class="note">
+        <em>⚠️ Note: API keys may take a few hours to activate after generation.</em>
+      </p>
+    </section>
+
+    <!-- Step 2 -->
+    <section class="step">
+      <h2>Step 2: Verify Your API Key</h2>
+      <ul>
+        <li>Enter your API key below to check if it’s working.</li>
+        <li>The system will verify it by making a test request to OpenWeather.</li>
+      </ul>
+
+      <form method="POST" class="api-form">
+        {% csrf_token %}
+        <input type="password" name="api_key" placeholder="Enter the API Key" required />
+        <button type="submit"> Verify & Continue</button>
+      </form>
+
+      {% if error %}
+        <div id="error-message" data-message="{{ error }}"></div>
+      {% endif %}
+    </section>
+  </div>
+
+  <!-- SweetAlert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{% static 'js/apiKeyHandler.js' %}?v=2"></script>
+</body>
+</html>
