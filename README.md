@@ -25,6 +25,13 @@ Users can:
 2. Create this directories
 - After cloning if any file is missed by any chance,
 - Please verify them accordingly.
+  
+  
+  
+  
+  
+  
+  ![alt text](image.png)
 
 3. Install Requirements
 - The requirements.txt has the tools and firware to be installed to run this.
@@ -46,3 +53,18 @@ Users can:
 
 7. Visit the website
 - now visit the website which is being showned in the terminal.
+
+8. User interfaces
+- Before entering into the weather view page
+
+![Entering page](image-1.png)
+
+
+- After entering into the weather view page
+
+![Interface page](image-2.png)
+
+
+- After entering a city name or coordinates you can get the current weather details and predicted temp and humidity values
+
+![Result page](image-3.png)

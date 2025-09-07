@@ -298,5 +298,3 @@ def weather_view(request):
         return render(request, 'weather.html', context)
     
     return render(request, 'weather.html')
-
-#5f37083c8374634c2908d0631ce766ba
