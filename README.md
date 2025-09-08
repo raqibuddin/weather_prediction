@@ -17,6 +17,10 @@ Users can:
 - **Frontend**: HTML, CSS, JavaScript (with SweetAlert2 for popups)
 - **API**: OpenWeatherMap
 
+##  Python File
+- There is a simple Python file named "temp_predict" which get temp predicted values
+- You can simple install the required tools and run this file 
+
 ##  Setup Instructions
 1. Clone the repository  
    ```bash
@@ -28,10 +32,7 @@ Users can:
   
   
   
-  
-  
-  
-  ![alt text](image.png)
+  ![Dicrectory](image.png)
 
 3. Install Requirements
 - The requirements.txt has the tools and firware to be installed to run this.
