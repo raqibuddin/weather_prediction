@@ -40,10 +40,10 @@ function toggleInputs() {
 });
 
 
-// ✅ Run on page load (restores correct box if Django preselected radio)
+//  Run on page load (restores correct box if Django preselected radio)
 window.addEventListener("load", toggleInputs);
 
-// ✅ Attach event listeners for toggle on radio change
+//  Attach event listeners for toggle on radio change
 document.querySelectorAll('input[name="option"]').forEach(radio => {
     radio.addEventListener("change", toggleInputs);
 });

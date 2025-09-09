@@ -42,12 +42,14 @@
         <li>The system will verify it by making a test request to OpenWeather.</li>
       </ul>
 
+      <!--input box-->
       <form method="POST" class="api-form">
         {% csrf_token %}
         <input type="password" name="api_key" placeholder="Enter the API Key" required />
         <button type="submit"> Verify & Continue</button>
       </form>
 
+      <!--error calling-->
       {% if error %}
         <div id="error-message" data-message="{{ error }}"></div>
       {% endif %}
