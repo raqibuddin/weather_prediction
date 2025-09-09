@@ -8,17 +8,23 @@ from sklearn.metrics import mean_squared_error  #to measure the accuracy
 from datetime import datetime,timedelta #to handle date and ime
 import pytz
 
+
+# 1. Function to get a valid API key
 def enter_api_key():
   API_KEY = None
   API_KEY = input("Enter your OpenWeatherMap API key: ").strip()
 
-  test_url= f"https://api.openweathermap.org/data/2.5/weather?q=London&appid={API_KEY}"
+  test_url= f"https://api.openweathermap.org/data/2.5/weather?q=London&appid={API_KEY}"   #test the API key
   response = requests.get(test_url)
-  if response.status_code != 200:
+
+  if response.status_code != 200:   # if status code ==200 then its a valid key
     print("Enter valid API_KEY")
     return enter_api_key()
+  
   return API_KEY
 
+
+# 2. Get current weather data
 def get_current_weather(city=None, lat=None, lon=None, API_KEY=None):
 
   BASE_URL='https://api.openweathermap.org/data/2.5/' #base url for making API request
@@ -46,6 +52,7 @@ def get_current_weather(city=None, lat=None, lon=None, API_KEY=None):
   }
 
 
+# 3. Read historical data
 def read_historical_data(filename):
   df = pd.read_csv(filename)  #read file into dataframe
   df=df.dropna() #remove rows with missing values
@@ -53,29 +60,32 @@ def read_historical_data(filename):
   return df
 
 
+# 4. Prepare data for training
 def prepare_data(data):
-  le =LabelEncoder() #create a labelencoder
-  data['WindGustDir'] = le.fit_transform(data['WindGustDir']) #encode categorical data
+  le =LabelEncoder()  #create a label encoder
+  data['WindGustDir'] = le.fit_transform(data['WindGustDir'])   #encode categorical data
   data['RainTomorrow'] = le.fit_transform(data['RainTomorrow'])
 
-  x=data[['MinTemp','MaxTemp','WindGustDir','WindGustSpeed','Humidity','Pressure','Temp']] #feature variables
-  y=data['RainTomorrow'] #target variable
+  x=data[['MinTemp','MaxTemp','WindGustDir','WindGustSpeed','Humidity','Pressure','Temp']]  #feature variables
+  y=data['RainTomorrow']  #target variable
 
   return x,y,le
 
 
+# 5. Train rain model
 def train_rain_model(x,y):
   x_train,x_test,y_train,y_test = train_test_split(x, y, test_size=0.2, random_state=42) #split data into training and testing sets
   model = RandomForestClassifier(n_estimators=100, random_state=42) #create a random forest classifier
-  model.fit(x_train, y_train) #train the model on the training data
+  model.fit(x_train, y_train)   #train the model on the training data
 
-  y_pred = model.predict(x_test) #make predictions on the testing data
-  accuracy = mean_squared_error(y_test,y_pred) #calculate the accuracy of the model
-  print("Mean squuared error value:",accuracy) #print the accuracy of the model
+  y_pred = model.predict(x_test)  #make predictions on the testing data
+  accuracy = mean_squared_error(y_test,y_pred)  #calculate the accuracy of the model
+  print("Mean squuared error value:",accuracy)  #print the accuracy of the model
 
   return model
 
 
+# 6. Prepare regression model
 def prepare_regression_data(data, feature):
   x_list,y_list= [] , []  #data set to added and initialize list for feature and target values
   for i in range(len(data)-1):
@@ -87,14 +97,16 @@ def prepare_regression_data(data, feature):
   return x,y
 
 
+# 7. Train regression data
 def train_regression_model(x,y):
   model=RandomForestRegressor(n_estimators=100,random_state=42) #create a random forest regressor
   model.fit(x,y) #train the model on the data
 
   return model
 
+# 8. Predicting future
 def predict_future(model, current_value):
-  predictions = []
+  predictions = []  # prediction array
   last_known_value = current_value
 
   for i in range(5):
@@ -104,8 +116,12 @@ def predict_future(model, current_value):
 
   return predictions
 
+
+# 9. Weather Ananlysis function
 def weather_view():
 
+    print("Generate your API key by signing up in OpenWeatherMap.")
+    print("NOTE- API key takes time to activate  after generating.")
     API_KEY=None
     API_KEY=enter_api_key()
     if not API_KEY:
@@ -133,15 +149,15 @@ def weather_view():
         return
 
 
-  #load historical data
+  # load historical data
     historical_data=read_historical_data('weather.csv')
 
-  #prepare and train rain prediction model
+  # prepare and train rain prediction model
     x,y,le=prepare_data(historical_data)
 
     rain_model=train_rain_model(x,y)
 
-  #map wind direction to campass points
+  # map wind direction to campass points
     wind_deg=current_weather['wind_gust_dir'] % 360
     compass_points=[('N', 0, 11.25),('NNE', 11.5, 33.75),('NE', 33.75, 56.25),
                   ('ENE', 56.25, 78.75),('E', 78.75 , 101.25),('ESE', 101.25, 123.75),
@@ -169,7 +185,7 @@ def weather_view():
   # rain prediction
     rain_prediction=rain_model.predict(current_df)[0]
 
-  #pepare regression model for temp and humidity
+  # pepare regression model for temp and humidity
     x_temp,y_temp=prepare_regression_data(historical_data,'Temp')
 
     x_hum,y_hum=prepare_regression_data(historical_data,'Humidity')
@@ -178,12 +194,12 @@ def weather_view():
 
     hum_model=train_regression_model(x_hum,y_hum)
 
-  #predict future temp and humidity
+  # predict future temp and humidity
     future_temp=predict_future(temp_model,current_weather['current_temp'])
 
     future_humidity=predict_future(hum_model,current_weather['humidity'])
 
-  #prepare time for future prediction
+  # prepare time for future prediction
     timezone=pytz.timezone('Asia/Kolkata')
     now=datetime.now(timezone)
     next_hour=now+timedelta(hours=1)
@@ -191,7 +207,7 @@ def weather_view():
 
     future_times=[(next_hour+timedelta(hours=i)).strftime("%H:00") for i in range(5)]
 
-  #display results
+  # display results
     print(f"City: {city} ,{current_weather['country']}")
     print(f"Current Temperature: {current_weather['current_temp']}°C")
     print(f"Feels Like:{current_weather['feels_like']} °C")
