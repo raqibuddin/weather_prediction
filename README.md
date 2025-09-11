@@ -18,7 +18,7 @@ Users can:
 - **API**: OpenWeatherMap
 
 ##  Python File
-- There is a simple Python file named "temp_predict" which get temp predicted values
+- There is a simple Python file named "temp_predict" which gives temp predicted values
 - You can simple install the required tools and run this file 
 
 ##  Setup Instructions
