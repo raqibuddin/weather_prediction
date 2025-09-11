@@ -184,6 +184,7 @@ def weather_view():
 
   # rain prediction
     rain_prediction=rain_model.predict(current_df)[0]
+    rain_prob = rain_model.predict_proba(current_df)[0][1] * 100
 
   # pepare regression model for temp and humidity
     x_temp,y_temp=prepare_regression_data(historical_data,'Temp')
@@ -215,7 +216,8 @@ def weather_view():
     print(f"Max temp:{current_weather['temp_max']} °C")
     print(f"Humidity: {current_weather['humidity']} %")
     print(f"Weather prediction: {current_weather['description']}")
-    print(f"Rain pridiction: {'Yes' if rain_prediction else 'No'}")
+    #print(f"Rain pridiction: {'Yes' if rain_prediction else 'No'}")
+    print(f"\nRain Today Probability: {rain_prob:.1f}%")
 
     print("\nFuture Temperature predictions:")
 

@@ -49,7 +49,7 @@ def get_current_weather(city=None, lat=None, lon=None, API_KEY=None):
 
         #print("Lat:", lat, "Lon:", lon)
 
-        # ✅ Check if API responded with an error
+        #  Check if API responded with an error
         if str(data.get("cod")) != "200":
             if str(data.get("cod")) == "404":
                 return {"error_message": "City not found. Please check the spelling and try again."}
@@ -58,7 +58,7 @@ def get_current_weather(city=None, lat=None, lon=None, API_KEY=None):
             else:
                 return {"error_message": f"Weather service error: {data.get('message', 'Unknown error')}."}
 
-        # ✅ If everything is good, return weather data
+        #  If everything is good, return weather data
         return {
             'city': data['name'],
             'current_temp': round(data['main']['temp']),
@@ -158,7 +158,7 @@ def weather_view(request):
     response = requests.get(test_url)
 
     if response.status_code != 200:
-        # ❌ invalid / expired / not activated key → clear session and redirect back
+        #  invalid / expired / not activated key → clear session and redirect back
         request.session.pop("api_key", None)
         return redirect("enter_api_key")
 
@@ -222,6 +222,7 @@ def weather_view(request):
 
         # rain prediction
         rain_prediction=rain_model.predict(current_df)[0]
+        rain_prob = rain_model.predict_proba(current_df)[0][1] * 100
 
         #pepare regression model for temp and humidity
         x_temp,y_temp=prepare_regression_data(historical_data,'Temp')
@@ -265,6 +266,7 @@ def weather_view(request):
            'feels_like':current_weather['feels_like'],
            'sea_level':current_weather['sea_level'],
            #'rain':current_weather['Rain'],
+           'rain_prob':rain_prob,
 
            'time': datetime.now(),
            'date': datetime.now().strftime("%B %d, %Y"),
