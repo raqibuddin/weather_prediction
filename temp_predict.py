@@ -79,7 +79,7 @@ def train_rain_model(x,y):
   model.fit(x_train, y_train)   #train the model on the training data
 
   y_pred = model.predict(x_test)  #make predictions on the testing data
-  accuracy = mean_squared_error(y_test,y_pred)  #calculate the accuracy of the model
+  accuracy = mean_squared_error(y_test, y_pred)  #calculate the accuracy of the model
   print("Mean squuared error value:",accuracy)  #print the accuracy of the model
 
   return model
